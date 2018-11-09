@@ -1,1 +1,3 @@
-print("Hi")
+from game.snake import start
+
+start()
