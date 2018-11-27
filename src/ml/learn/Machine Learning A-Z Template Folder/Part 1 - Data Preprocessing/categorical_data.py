@@ -25,4 +25,11 @@ X[:, 0] = labelencoder_X.fit_transform(X[:, 0])
 from sklearn.model_selection import train_test_split
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=2, random_state=42)
 
+# keras api
+import keras
+from keras.models import Sequential
+from keras.layers import Dense
+
+clasifier = Sequential()
+
 print('a')
