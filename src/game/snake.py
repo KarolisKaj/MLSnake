@@ -15,7 +15,7 @@ def inside(head):
     "Return True if head inside boundaries."
     return -200 < head.x < 190 and -200 < head.y < 190
 
-def move():
+def move(track):
     "Move snake forward one segment."
     head = snake[-1].copy()
     head.move(aim)
@@ -42,8 +42,10 @@ def move():
     square(food.x, food.y, 9, 'green')
     update()
     ontimer(move, 100)
+    print("moved")
+    track()
 
-def start():
+def start(track):
     setup(420, 420, 370, 0)
     hideturtle()
     tracer(False)
@@ -52,5 +54,5 @@ def start():
     # onkey(lambda: change(-10, 0), 'Left')
     # onkey(lambda: change(0, 10), 'Up')
     # onkey(lambda: change(0, -10), 'Down')
-    move()
+    move(track)
     done()

@@ -1,3 +1,4 @@
 # Figure of more relevant data about the snake.
-def currentData(starvation, length, left, right, top, bottom):
+def currentMove(starvation, length, scoreDif, left, right, top, bottom, headCoordinates, foodCoordinates):
+    
     return "a"
