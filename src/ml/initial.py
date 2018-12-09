@@ -1,4 +1,12 @@
-# Figure of more relevant data about the snake.
-def currentMove(starvation, length, scoreDif, left, right, top, bottom, headCoordinates, foodCoordinates):
+lastScore = 0
+data = list()
+
+def trackedMove(length, score, left, right, top, bottom, headCoordinates, foodCoordinates, aim):
     
-    return "a"
+    data.append((length, score, left, right, ))
+    if(score > lastScore)
+        flush()
+        lastScore = score
+    
+    print(length)
+
