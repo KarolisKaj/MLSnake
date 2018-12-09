@@ -1,3 +1,5 @@
 from game.snake import start
+from ml.initial import trainer
 
-start()
+trainer = trainer()
+start(initial.trackedMove)

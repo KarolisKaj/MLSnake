@@ -1,7 +1,6 @@
 from turtle import *
 from random import randrange
 from freegames import square, vector
-from ml.initial import trackedMove
 
 food = vector(0, 0)
 snake = [vector(10, 0)]
@@ -24,8 +23,17 @@ def moveDirection(head, aim):
     else:
         return "Top"
 
+def whereIsCoordinate(coordinates):
+    if(not inside(coordinates)):
+        return "Wall"
+    elif (coordinates in snake):
+        return "Body"
+    elif (coordinates == food):  
+        return "Food"
+    else:
+        return "Empty"
 
-def move():
+def move(track):
     head = snake[-1].copy()
     direction = moveDirection(head, aim)
     head.move(aim)
@@ -51,21 +59,11 @@ def move():
 
     square(food.x, food.y, 9, 'green')
     update()
-    ontimer(move, 100)
-    trackedMove(len(snake), len(snake) * 10, (head.x - 10, head.y), (head.x + 10, head.y),(head.x, head.y + 10), (head.x, head.y - 10), (head.x, head.y), (food.x, food.y), direction)
-    # Tracking snake actions.
+    ontimer(lambda: move(track), 100)
+    track(len(snake), len(snake) * 10, whereIsCoordinate(vector(head.x - 10, head.y)), whereIsCoordinate(vector(head.x + 10, head.y)), whereIsCoordinate(vector(head.x, head.y + 10)), whereIsCoordinate(vector(head.x, head.y - 10)), (head.x, head.y), (food.x, food.y), direction)
+    
 
-def whereIsCoordinate(coordinates):
-    if(not inside(coordinates)):
-        return "Wall"
-    elif (coordinates in snake):
-        return "Body"
-    elif (coordinates == food):  
-        return "Food"
-    else:
-        return "Empty"
-
-def start():
+def start(track):
     setup(420, 420, 370, 0)
     hideturtle()
     tracer(False)
@@ -74,5 +72,5 @@ def start():
     onkey(lambda: change(-10, 0), 'Left')
     onkey(lambda: change(0, 10), 'Up')
     onkey(lambda: change(0, -10), 'Down')
-    move()
+    move(track)
     done()
