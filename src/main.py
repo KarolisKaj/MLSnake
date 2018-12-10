@@ -1,5 +1,8 @@
 from game.snake import start
-from ml.initial import trainer
+from ml.trainer import trainer
+from ml.learner import learner
 
 trainer = trainer()
-start(initial.trackedMove)
+learner = learner("C:/Users/WarHorse/SourceControl/MLSnake/properData/snake_data_raw_v1.json")
+learner.getModel()
+start(learner.trackedMove)
