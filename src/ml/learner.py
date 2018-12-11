@@ -1,5 +1,6 @@
 import pandas as pd 
 import tensorflow as tf
+import numpy as np
 
 class learner:
     def __init__(self, trainingSetPath):
@@ -30,9 +31,12 @@ class learner:
         model.add(tf.keras.layers.Flatten())
         model.add(tf.keras.layers.Dense(10, activation = tf.nn.relu))
         model.add(tf.keras.layers.Dense(20, activation = tf.nn.relu))
-        model.add(tf.keras.layers.Dense(4, activation = tf.nn.softmax))
+        model.add(tf.keras.layers.Dense(5, activation = tf.nn.softmax))
 
         model.compile(optimizer = 'adam', loss='sparse_categorical_crossentropy', metrics=['accuracy'])
-        model.fit(df[0:10], df[11], epochs=4)
+        print(df.values)
+        x_train = np.asarray([row[:11] for row in df.values])
+        y_train = np.asarray([row[11] for row in df.values])
+        model.fit(x_train, y_train, epochs=4)
         return model
 
