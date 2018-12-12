@@ -37,6 +37,6 @@ class learner:
         print(df.values)
         x_train = np.asarray([row[:11] for row in df.values])
         y_train = np.asarray([row[11] for row in df.values])
-        model.fit(x_train, y_train, epochs=4)
+        model.fit(x_train, y_train, epochs=5)
         return model
 
