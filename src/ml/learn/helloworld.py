@@ -19,7 +19,7 @@ model.fit(x_train, y_train, epochs=4)
 validation_loss, validation_accuracy =  model.evaluate(x_test, y_test)
 print(validation_loss, validation_accuracy)
 
-predictions = model.predict([x_test])
+predictions = model.predict([x_test[0:2]])
 
 import numpy as np
 print(np.argmax(predictions[9]))

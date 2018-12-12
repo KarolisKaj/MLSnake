@@ -17,6 +17,7 @@ class trainer:
 
         self.trainData.append((self.turnsWithoutFood, length, score, left, right, top, bottom, headCoordinates[0], headCoordinates[1], foodCoordinates[0], foodCoordinates[1], direction))
         print(self.trainData[-1])
+        return self.trainData[-1]
     
     def flush(self):
         df = pd.DataFrame(data = self.trainData)

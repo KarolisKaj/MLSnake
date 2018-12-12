@@ -4,39 +4,62 @@ import numpy as np
 
 class learner:
     def __init__(self, trainingSetPath):
+        self.neighbour = { 'Food': 4, 'Empty': 3,'Wall': 2, 'Body': 1 }
         self.df = pd.read_json(trainingSetPath)
-
+        self.model = self.createModel()
 
     def fixData(self):
-        # Transform
-        neighbour = { 'Food': 4, 'Empty': 3,'Wall': 2, 'Body': 1 }
-        self.df[3] = [neighbour[item] for item in self.df[3]] 
-        self.df[4] = [neighbour[item] for item in self.df[4]] 
-        self.df[5] = [neighbour[item] for item in self.df[5]] 
-        self.df[6] = [neighbour[item] for item in self.df[6]]
 
-        move = {'Right': 1, 'Left': 2,'Top': 3, 'Bottom':4 }
+        # Transform
+        self.df[3] = self.transformNeighbour(self.df[3])
+        self.df[4] = self.transformNeighbour(self.df[4])
+        self.df[5] = self.transformNeighbour(self.df[5])
+        self.df[6] = self.transformNeighbour(self.df[6])
+
+        move = {'Right': 0, 'Left': 1,'Top': 2, 'Bottom': 3 }
         self.df[11] = [move[item] for item in self.df[11]]
 
         # Normalize
-        
-        df = ((self.df - self.df.mean()) / (self.df.max() - self.df.min()))
-        df[11] = self.df[11]
+        df = self.df
+        self.dif = [1] * 11
+        self.mean = [1] * 11
+        for i in range(11): 
+            self.dif[i] = self.df[i].max() - self.df[i].min()
+            self.mean[i] = self.df[i].mean()
+            df[i] = ((self.df[i] - self.mean[i]) / self.dif[i])
         return df
 
-    def getModel(self):
+    def transformNeighbour(self, dataSet):
+        return [self.neighbour[item] for item in dataSet]
+
+    def createModel(self):
         df = self.fixData()
 
         model = tf.keras.models.Sequential()
         model.add(tf.keras.layers.Flatten())
-        model.add(tf.keras.layers.Dense(10, activation = tf.nn.relu))
-        model.add(tf.keras.layers.Dense(20, activation = tf.nn.relu))
-        model.add(tf.keras.layers.Dense(5, activation = tf.nn.softmax))
+        model.add(tf.keras.layers.Dense(11, activation = tf.nn.relu))
+        model.add(tf.keras.layers.Dense(22, activation = tf.nn.relu))
+        model.add(tf.keras.layers.Dense(4, activation = tf.nn.softmax))
 
         model.compile(optimizer = 'adam', loss='sparse_categorical_crossentropy', metrics=['accuracy'])
         print(df.values)
         x_train = np.asarray([row[:11] for row in df.values])
         y_train = np.asarray([row[11] for row in df.values])
-        model.fit(x_train, y_train, epochs=5)
+        model.fit(x_train, y_train, epochs = 5)
         return model
+
+    def predict(self, dataRaw):
+        data = [1] * 11
+        data[3] = self.transformNeighbour([dataRaw[3]])[0]
+        data[4] = self.transformNeighbour([dataRaw[4]])[0]
+        data[5] = self.transformNeighbour([dataRaw[5]])[0]
+        data[6] = self.transformNeighbour([dataRaw[6]])[0]
+        
+        for i in range(11):
+            data[i] = (((data[i] if isinstance(dataRaw[i], str) else dataRaw[i]) - self.mean[i]) / self.dif[i])
+        
+        predictedMove = self.model.predict([[data]])
+        print(predictedMove)
+        print(np.argmax(predictedMove[0]))
+        return np.argmax(predictedMove[0])
 
