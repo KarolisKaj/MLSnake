@@ -47,9 +47,12 @@ def move(track, predict):
     snake.append(head)
 
     if head == food:
-        print('Snake:', len(snake))
+        print('Snake grew to :', len(snake))
         food.x = randrange(-19, 19) * 10
         food.y = randrange(-19, 19) * 10
+        if(food in snake):
+            food.x = randrange(-19, 19) * 10
+            food.y = randrange(-19, 19) * 10
     else:
         snake.pop(0)
 
@@ -61,7 +64,7 @@ def move(track, predict):
     square(food.x, food.y, 9, 'green')
     update()
     ontimer(lambda: move(track, predict), 100)
-    performPredictedMove(predict(stepData))
+    # performPredictedMove(predict(stepData))
 
 def start(track, predict):
     setup(420, 420, 370, 0)
