@@ -11,14 +11,14 @@ def change(x, y):
     aim.y = y
 
 def inside(coordinates):
-    return -200 < coordinates.x < 190 and -200 < coordinates.y < 190
+    return -200 < coordinates.x < 200 and -200 < coordinates.y < 200
 
 def moveDirection(head, aim):
-    if(head.x > aim.x):
+    if(aim.x > 0):
         return "Right"
-    elif(head.x < aim.x):
+    elif(aim.x < 0):
         return "Left"
-    elif(head.y > aim.y):
+    elif(aim.y < 0):
         return "Bottom"
     else:
         return "Top"
@@ -36,6 +36,7 @@ def whereIsCoordinate(coordinates):
 def move(track, predict):
     head = snake[-1].copy()
     direction = moveDirection(head, aim)
+    stepData = track(len(snake), len(snake) * 10, whereIsCoordinate(vector(head.x - 10, head.y)), whereIsCoordinate(vector(head.x + 10, head.y)), whereIsCoordinate(vector(head.x, head.y + 10)), whereIsCoordinate(vector(head.x, head.y - 10)), (head.x, head.y), (food.x, food.y), direction)
     head.move(aim)
 
     if not inside(head) or head in snake:
@@ -60,9 +61,22 @@ def move(track, predict):
     square(food.x, food.y, 9, 'green')
     update()
     ontimer(lambda: move(track, predict), 100)
-    stepData = track(len(snake), len(snake) * 10, whereIsCoordinate(vector(head.x - 10, head.y)), whereIsCoordinate(vector(head.x + 10, head.y)), whereIsCoordinate(vector(head.x, head.y + 10)), whereIsCoordinate(vector(head.x, head.y - 10)), (head.x, head.y), (food.x, food.y), direction)
-    predictedDirection = predict(stepData)
-    #{'Right': 0, 'Left': 1,'Top': 2, 'Bottom': 3 }
+    performPredictedMove(predict(stepData))
+
+def start(track, predict):
+    setup(420, 420, 370, 0)
+    hideturtle()
+    tracer(False)
+    listen()
+    onkey(lambda: change(10, 0), 'Right')
+    onkey(lambda: change(-10, 0), 'Left')
+    onkey(lambda: change(0, 10), 'Up')
+    onkey(lambda: change(0, -10), 'Down')
+    move(track, predict)
+    done()
+
+#{'Right': 0, 'Left': 1,'Top': 2, 'Bottom': 3 }
+def performPredictedMove(predictedDirection):
     if(predictedDirection == 0):
         right()
     elif(predictedDirection == 1):
@@ -71,18 +85,6 @@ def move(track, predict):
         bottom()
     elif(predictedDirection == 3):
         top()
-
-def start(track, predict):
-    setup(420, 420, 370, 0)
-    hideturtle()
-    tracer(False)
-    listen()
-    # onkey(lambda: change(10, 0), 'Right')
-    # onkey(lambda: change(-10, 0), 'Left')
-    # onkey(lambda: change(0, 10), 'Up')
-    # onkey(lambda: change(0, -10), 'Down')
-    move(track, predict)
-    done()
 
 def right():
     change(10, 0)

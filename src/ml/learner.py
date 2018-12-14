@@ -38,14 +38,14 @@ class learner:
         model = tf.keras.models.Sequential()
         model.add(tf.keras.layers.Flatten())
         model.add(tf.keras.layers.Dense(11, activation = tf.nn.relu))
-        model.add(tf.keras.layers.Dense(22, activation = tf.nn.relu))
+        model.add(tf.keras.layers.Dense(11, activation = tf.nn.relu))
         model.add(tf.keras.layers.Dense(4, activation = tf.nn.softmax))
 
         model.compile(optimizer = 'adam', loss='sparse_categorical_crossentropy', metrics=['accuracy'])
         print(df.values)
         x_train = np.asarray([row[:11] for row in df.values])
         y_train = np.asarray([row[11] for row in df.values])
-        model.fit(x_train, y_train, epochs = 5)
+        model.fit(x_train, y_train, epochs = 3)
         return model
 
     def predict(self, dataRaw):

@@ -10,5 +10,4 @@ TODO:
 * Let it play & win :)
 
 Flaws:
-* Data is by one step too late.
-* More data or find an issue with data.
+* Data was incorrect
