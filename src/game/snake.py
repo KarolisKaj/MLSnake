@@ -1,12 +1,15 @@
 import turtle
+import time
 from random import randrange
 from freegames import square, vector
 
 class snakeGame:
-    def __init__(self):
+    def __init__(self, cleaned):
         self.food = vector(0, 0)
         self.snake = [vector(10, 0)]
         self.aim = vector(0, -10)
+        self.cleaned = cleaned
+        self.turnsNoFood = 0
 
     def setFoodCoordinates(self):
         self.food.x = randrange(-19, 19) * 10
@@ -22,6 +25,13 @@ class snakeGame:
         return -200 < coordinates.x < 200 and -200 < coordinates.y < 200
 
     def move(self, track, predict):
+        # Reset game no stuck
+        self.turnsNoFood +=1
+        if(self.turnsNoFood > 200):
+            turtle.clear()
+            self.cleaned()
+            return
+
         head = self.snake[-1].copy()
         # Play
         stepData = track(len(self.snake), len(self.snake) * 10, self.whereIsCoordinate(vector(head.x - 10, head.y)), self.whereIsCoordinate(vector(head.x + 10, head.y)), self.whereIsCoordinate(vector(head.x, head.y + 10)), self.whereIsCoordinate(vector(head.x, head.y - 10)), (head.x, head.y), (self.food.x, self.food.y), None)
@@ -34,11 +44,15 @@ class snakeGame:
         if not self.inside(head) or head in self.snake:
             square(head.x, head.y, 9, 'red')
             turtle.update()
+            print("reseting field")
+            turtle.clear()
+            self.cleaned()
             return
 
         self.snake.append(head)
 
         if head == self.food:
+            self.turnsNoFood = 0
             print('Snake size :', len(self.snake))
             self.setFoodCoordinates()
         else:
@@ -53,18 +67,16 @@ class snakeGame:
         turtle.update()
         turtle.ontimer(lambda: self.move(track, predict), 100)
 
-
     def start(self, track, predict):
         turtle.setup(420, 420, 370, 0)
         turtle.hideturtle()
         turtle.tracer(False)
         turtle.listen()
-        # turtle.onkey(lambda: self.change(10, 0), 'Right')
-        # turtle.onkey(lambda: self.change(-10, 0), 'Left')
-        # turtle.onkey(lambda: self.change(0, 10), 'Up')
-        # turtle.onkey(lambda: self.change(0, -10), 'Down')
+        turtle.onkey(lambda: self.change(10, 0), 'Right')
+        turtle.onkey(lambda: self.change(-10, 0), 'Left')
+        turtle.onkey(lambda: self.change(0, 10), 'Up')
+        turtle.onkey(lambda: self.change(0, -10), 'Down')
         self.move(track, predict)
-        turtle.done()
 
 
     #{'Right': 0, 'Left': 1,'Top': 2, 'Bottom': 3 }

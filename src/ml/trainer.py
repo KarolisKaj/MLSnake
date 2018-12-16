@@ -9,12 +9,13 @@ class trainer:
         self.turnsWithoutFood = 0
         self.version = self.getVersion(pathPattern)
         self.trainData = list()
+        self.faultedState = False
 
     def trackedMove(self, length, score, left, right, top, bottom, headCoordinates, foodCoordinates, direction):
         if(direction == None): # get data to predict it.
             return (self.turnsWithoutFood, length, score, left, right, top, bottom, headCoordinates[0], headCoordinates[1], foodCoordinates[0], foodCoordinates[1], direction)
 
-        if(score > self.lastScore):
+        if(score > self.lastScore and score > 20):
             self.turnsWithoutFood = 0
             self.lastScore = score
             self.trainData.append((self.turnsWithoutFood, length, score, left, right, top, bottom, headCoordinates[0], headCoordinates[1], foodCoordinates[0], foodCoordinates[1], direction))

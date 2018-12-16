@@ -16,6 +16,12 @@ class learner:
         self.df[5] = self.transformNeighbour(self.df[5])
         self.df[6] = self.transformNeighbour(self.df[6])
 
+        # Make all positive
+        self.df[7] = [value + 1000 for value in self.df[7]]
+        self.df[8] = [value + 1000 for value in self.df[8]]
+        self.df[9] = [value + 1000 for value in self.df[9]]
+        self.df[10] = [value + 1000 for value in self.df[10]]
+
         move = {'Right': 0, 'Left': 1,'Top': 2, 'Bottom': 3 }
         self.df[11] = [move[item] for item in self.df[11]]
 
@@ -45,7 +51,7 @@ class learner:
         print(df.values)
         x_train = np.asarray([row[:11] for row in df.values])
         y_train = np.asarray([row[11] for row in df.values])
-        model.fit(x_train, y_train, epochs = 13)
+        model.fit(x_train, y_train, epochs = 3)
         return model
 
     def predict(self, dataRaw):
@@ -54,6 +60,11 @@ class learner:
         data[4] = self.transformNeighbour([dataRaw[4]])[0]
         data[5] = self.transformNeighbour([dataRaw[5]])[0]
         data[6] = self.transformNeighbour([dataRaw[6]])[0]
+
+        data[7] = dataRaw[7] + 1000
+        data[8] = dataRaw[8] + 1000
+        data[9] = dataRaw[9] + 1000
+        data[10] = dataRaw[10] + 1000
         
         for i in range(11):
             data[i] = (((data[i] if isinstance(dataRaw[i], str) else dataRaw[i]) - self.mean[i]) / self.dif[i])

@@ -1,3 +1,5 @@
 import runner 
+import turtle
 
-runner.startRunner()
+runner.rerun()
+turtle.done()
