@@ -6,6 +6,12 @@ food = vector(0, 0)
 snake = [vector(10, 0)]
 aim = vector(0, -10)
 
+def setFoodCoordinates():
+    food.x = randrange(-19, 19) * 10
+    food.y = randrange(-19, 19) * 10
+    if(food in snake):
+        setFoodCoordinates()
+
 def change(x, y):
     aim.x = x
     aim.y = y
@@ -13,30 +19,16 @@ def change(x, y):
 def inside(coordinates):
     return -200 < coordinates.x < 200 and -200 < coordinates.y < 200
 
-def moveDirection(head, aim):
-    if(aim.x > 0):
-        return "Right"
-    elif(aim.x < 0):
-        return "Left"
-    elif(aim.y < 0):
-        return "Bottom"
-    else:
-        return "Top"
-
-def whereIsCoordinate(coordinates):
-    if(not inside(coordinates)):
-        return "Wall"
-    elif (coordinates in snake):
-        return "Body"
-    elif (coordinates == food):  
-        return "Food"
-    else:
-        return "Empty"
-
 def move(track, predict):
     head = snake[-1].copy()
+    
+    # Learn only by human
+    # track(len(snake), len(snake) * 10, whereIsCoordinate(vector(head.x - 10, head.y)), whereIsCoordinate(vector(head.x + 10, head.y)), whereIsCoordinate(vector(head.x, head.y + 10)), whereIsCoordinate(vector(head.x, head.y - 10)), (head.x, head.y), (food.x, food.y), direction)
+    # Play
+    stepData = track(len(snake), len(snake) * 10, whereIsCoordinate(vector(head.x - 10, head.y)), whereIsCoordinate(vector(head.x + 10, head.y)), whereIsCoordinate(vector(head.x, head.y + 10)), whereIsCoordinate(vector(head.x, head.y - 10)), (head.x, head.y), (food.x, food.y), None)
+    performPredictedMove(predict(stepData))
     direction = moveDirection(head, aim)
-    stepData = track(len(snake), len(snake) * 10, whereIsCoordinate(vector(head.x - 10, head.y)), whereIsCoordinate(vector(head.x + 10, head.y)), whereIsCoordinate(vector(head.x, head.y + 10)), whereIsCoordinate(vector(head.x, head.y - 10)), (head.x, head.y), (food.x, food.y), direction)
+    track(len(snake), len(snake) * 10, whereIsCoordinate(vector(head.x - 10, head.y)), whereIsCoordinate(vector(head.x + 10, head.y)), whereIsCoordinate(vector(head.x, head.y + 10)), whereIsCoordinate(vector(head.x, head.y - 10)), (head.x, head.y), (food.x, food.y), direction)
     head.move(aim)
 
     if not inside(head) or head in snake:
@@ -47,12 +39,8 @@ def move(track, predict):
     snake.append(head)
 
     if head == food:
-        print('Snake grew to :', len(snake))
-        food.x = randrange(-19, 19) * 10
-        food.y = randrange(-19, 19) * 10
-        if(food in snake):
-            food.x = randrange(-19, 19) * 10
-            food.y = randrange(-19, 19) * 10
+        print('Snake size :', len(snake))
+        setFoodCoordinates()
     else:
         snake.pop(0)
 
@@ -64,7 +52,7 @@ def move(track, predict):
     square(food.x, food.y, 9, 'green')
     update()
     ontimer(lambda: move(track, predict), 100)
-    # performPredictedMove(predict(stepData))
+
 
 def start(track, predict):
     setup(420, 420, 370, 0)
@@ -85,9 +73,9 @@ def performPredictedMove(predictedDirection):
     elif(predictedDirection == 1):
         left()
     elif(predictedDirection == 2):
-        bottom()
-    elif(predictedDirection == 3):
         top()
+    elif(predictedDirection == 3):
+        bottom()
 
 def right():
     change(10, 0)
@@ -97,3 +85,23 @@ def top():
     change(0, 10)
 def bottom():
     change(0, -10)
+
+def moveDirection(head, aim):
+    if(aim.x > 0):
+        return "Right"
+    elif(aim.x < 0):
+        return "Left"
+    elif(aim.y < 0):
+        return "Bottom"
+    else:
+        return "Top"
+
+def whereIsCoordinate(coordinates):
+    if(not inside(coordinates)):
+        return "Wall"
+    elif (coordinates in snake):
+        return "Body"
+    elif (coordinates == food):  
+        return "Food"
+    else:
+        return "Empty"

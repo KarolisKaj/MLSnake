@@ -1,15 +1,15 @@
 import pandas as pd 
 import tensorflow as tf
 import numpy as np
+import glob as glob
 
 class learner:
     def __init__(self, trainingSetPath):
         self.neighbour = { 'Food': 4, 'Empty': 3,'Wall': 2, 'Body': 1 }
-        self.df = pd.read_json(trainingSetPath)
+        self.df = self.loadAllData(trainingSetPath)
         self.model = self.createModel()
 
     def fixData(self):
-
         # Transform
         self.df[3] = self.transformNeighbour(self.df[3])
         self.df[4] = self.transformNeighbour(self.df[4])
@@ -45,7 +45,7 @@ class learner:
         print(df.values)
         x_train = np.asarray([row[:11] for row in df.values])
         y_train = np.asarray([row[11] for row in df.values])
-        model.fit(x_train, y_train, epochs = 3)
+        model.fit(x_train, y_train, epochs = 13)
         return model
 
     def predict(self, dataRaw):
@@ -62,4 +62,9 @@ class learner:
         print(predictedMove)
         print(np.argmax(predictedMove[0]))
         return np.argmax(predictedMove[0])
+    
+    def loadAllData(self, path):
+        files = glob.iglob(path, recursive=False)
+        dataFrames = [pd.read_json(file) for file in files]
+        return pd.concat(dataFrames)
 
