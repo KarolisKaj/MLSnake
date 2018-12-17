@@ -5,7 +5,7 @@ from freegames import square, vector
 
 class snakeGame:
     def __init__(self, cleaned):
-        self.food = vector(0, 0)
+        self.food = vector(randrange(-19, 19) * 10, randrange(-19, 19) * 10)
         self.snake = [vector(randrange(-19, 19) * 10, randrange(-19, 19) * 10)]
         self.aim = vector(0, -10)
         self.cleaned = cleaned
@@ -36,6 +36,14 @@ class snakeGame:
         # Play
         stepData = track(len(self.snake), len(self.snake) * 10, self.whereIsCoordinate(vector(head.x - 10, head.y)), self.whereIsCoordinate(vector(head.x + 10, head.y)), self.whereIsCoordinate(vector(head.x, head.y + 10)), self.whereIsCoordinate(vector(head.x, head.y - 10)), (head.x, head.y), (self.food.x, self.food.y), None)
         self.performPredictedMove(predict(stepData))
+        # Hardcoded snake game. To improve learning
+        if(len(self.snake) > 0):
+            self.aim.x = 0
+            self.aim.y = 0
+            if((head.x - self.food.x) != 0 ):
+                self.aim.x = 10 * -((head.x - self.food.x) / abs((head.x - self.food.x)))
+            if((head.y - self.food.y) != 0 and self.aim.x == 0):
+                self.aim.y = 10 * -((head.y - self.food.y) / abs((head.y - self.food.y)))
         # Learn
         direction = self.moveDirection(head, self.aim)
         track(len(self.snake), len(self.snake) * 10, self.whereIsCoordinate(vector(head.x - 10, head.y)), self.whereIsCoordinate(vector(head.x + 10, head.y)), self.whereIsCoordinate(vector(head.x, head.y + 10)), self.whereIsCoordinate(vector(head.x, head.y - 10)), (head.x, head.y), (self.food.x, self.food.y), direction)

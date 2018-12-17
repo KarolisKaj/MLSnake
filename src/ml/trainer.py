@@ -23,12 +23,13 @@ class trainer:
             self.turnsWithoutFood += 1
 
         self.trainData.append((self.turnsWithoutFood, length, score, left, right, top, bottom, headCoordinates[0], headCoordinates[1], foodCoordinates[0], foodCoordinates[1], direction))
-        print("Stored data - ", self.trainData[-1])
         return self.trainData[-1]
     
     def flush(self):
         df = pd.DataFrame(data = self.trainData)
         df.to_json('properData/snake_data_raw_v1_{0}_autogen.json'.format(self.version))
+        print("Last stored value - ", self.trainData[-1])
+
 
     def getVersion(self, pathPattern):
         files = glob.iglob(pathPattern, recursive=False)
