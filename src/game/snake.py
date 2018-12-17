@@ -6,7 +6,7 @@ from freegames import square, vector
 class snakeGame:
     def __init__(self, cleaned):
         self.food = vector(0, 0)
-        self.snake = [vector(10, 0)]
+        self.snake = [vector(randrange(-19, 19) * 10, randrange(-19, 19) * 10)]
         self.aim = vector(0, -10)
         self.cleaned = cleaned
         self.turnsNoFood = 0
@@ -27,7 +27,7 @@ class snakeGame:
     def move(self, track, predict):
         # Reset game no stuck
         self.turnsNoFood +=1
-        if(self.turnsNoFood > 200):
+        if(self.turnsNoFood > 100):
             turtle.clear()
             self.cleaned()
             return

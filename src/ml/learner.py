@@ -51,11 +51,14 @@ class learner:
         print(df.values)
         x_train = np.asarray([row[:11] for row in df.values])
         y_train = np.asarray([row[11] for row in df.values])
-        model.fit(x_train, y_train, epochs = 3)
+
+        # Reduce data intake
+        # x_train = x_train[:,[7,8,9,10]]
+        model.fit(x_train, y_train, epochs = 5)
         return model
 
     def predict(self, dataRaw):
-        data = [1] * 11
+        data = np.zeros(11)
         data[3] = self.transformNeighbour([dataRaw[3]])[0]
         data[4] = self.transformNeighbour([dataRaw[4]])[0]
         data[5] = self.transformNeighbour([dataRaw[5]])[0]
@@ -69,6 +72,8 @@ class learner:
         for i in range(11):
             data[i] = (((data[i] if isinstance(dataRaw[i], str) else dataRaw[i]) - self.mean[i]) / self.dif[i])
         
+        # Reduce data intake
+        # data = data[7:11]
         predictedMove = self.model.predict([[data]])
         print(predictedMove)
         print(np.argmax(predictedMove[0]))

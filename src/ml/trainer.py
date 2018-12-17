@@ -15,10 +15,9 @@ class trainer:
         if(direction == None): # get data to predict it.
             return (self.turnsWithoutFood, length, score, left, right, top, bottom, headCoordinates[0], headCoordinates[1], foodCoordinates[0], foodCoordinates[1], direction)
 
-        if(score > self.lastScore and score > 20):
+        if(score > self.lastScore and score > 10):
             self.turnsWithoutFood = 0
             self.lastScore = score
-            self.trainData.append((self.turnsWithoutFood, length, score, left, right, top, bottom, headCoordinates[0], headCoordinates[1], foodCoordinates[0], foodCoordinates[1], direction))
             self.flush()
         else:
             self.turnsWithoutFood += 1
