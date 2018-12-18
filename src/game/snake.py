@@ -40,10 +40,10 @@ class snakeGame:
         if(len(self.snake) > 0):
             self.aim.x = 0
             self.aim.y = 0
-            if((head.x - self.food.x) != 0 ):
-                self.aim.x = 10 * -((head.x - self.food.x) / abs((head.x - self.food.x)))
-            if((head.y - self.food.y) != 0 and self.aim.x == 0):
-                self.aim.y = 10 * -((head.y - self.food.y) / abs((head.y - self.food.y)))
+            if((head.y - self.food.y) != 0):
+                self.aim.y = 10 * -((head.y - self.food.y) / abs(head.y - self.food.y))
+            if((head.x - self.food.x) != 0  and self.aim.y == 0):
+                self.aim.x = 10 * -((head.x - self.food.x) / abs(head.x - self.food.x))
         # Learn
         direction = self.moveDirection(head, self.aim)
         track(len(self.snake), len(self.snake) * 10, self.whereIsCoordinate(vector(head.x - 10, head.y)), self.whereIsCoordinate(vector(head.x + 10, head.y)), self.whereIsCoordinate(vector(head.x, head.y + 10)), self.whereIsCoordinate(vector(head.x, head.y - 10)), (head.x, head.y), (self.food.x, self.food.y), direction)

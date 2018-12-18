@@ -54,7 +54,7 @@ class learner:
 
         # Reduce data intake
         # x_train = x_train[:,[7,8,9,10]]
-        model.fit(x_train, y_train, epochs = 1)
+        model.fit(x_train, y_train, epochs = 0)
         return model
 
     def predict(self, dataRaw):
