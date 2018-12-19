@@ -5,7 +5,7 @@ import glob as glob
 
 class learner:
     def __init__(self, trainingSetPath):
-        self.neighbour = { 'Food': 4, 'Empty': 3,'Wall': 2, 'Body': 1 }
+        self.neighbour = { 'Food': 10, 'Empty': 7,'Wall': 2, 'Body': 1 }
         self.df = self.loadAllData(trainingSetPath)
         self.model = self.createModel()
 
@@ -22,7 +22,7 @@ class learner:
         self.df[9] = [value + 1000 for value in self.df[9]]
         self.df[10] = [value + 1000 for value in self.df[10]]
 
-        move = {'Right': 0, 'Left': 1,'Top': 2, 'Bottom': 3 }
+        move = {'Right': 0, 'Left': 2,'Top': 1, 'Bottom': 3 }
         self.df[11] = [move[item] for item in self.df[11]]
 
         # Normalize
@@ -44,7 +44,9 @@ class learner:
         model = tf.keras.models.Sequential()
         model.add(tf.keras.layers.Flatten())
         model.add(tf.keras.layers.Dense(11, activation = tf.nn.relu))
-        model.add(tf.keras.layers.Dense(11, activation = tf.nn.relu))
+        model.add(tf.keras.layers.Dense(128, activation = tf.nn.relu))
+        model.add(tf.keras.layers.Dense(128, activation = tf.nn.relu))
+        model.add(tf.keras.layers.Dense(32, activation = tf.nn.relu))
         model.add(tf.keras.layers.Dense(4, activation = tf.nn.softmax))
 
         model.compile(optimizer = 'adam', loss='sparse_categorical_crossentropy', metrics=['accuracy'])
@@ -54,7 +56,7 @@ class learner:
 
         # Reduce data intake
         # x_train = x_train[:,[7,8,9,10]]
-        model.fit(x_train, y_train, epochs = 0)
+        model.fit(x_train, y_train, epochs = 2)
         return model
 
     def predict(self, dataRaw):
@@ -75,11 +77,10 @@ class learner:
         # Reduce data intake
         # data = data[7:11]
         predictedMove = self.model.predict([[data]])
-        print(predictedMove)
-        print(np.argmax(predictedMove[0]))
         return np.argmax(predictedMove[0])
     
     def loadAllData(self, path):
+        print("Reading training data...")
         files = glob.iglob(path, recursive=False)
         dataFrames = [pd.read_json(file) for file in files]
         return pd.concat(dataFrames)

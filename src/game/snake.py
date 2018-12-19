@@ -27,7 +27,7 @@ class snakeGame:
     def move(self, track, predict):
         # Reset game no stuck
         self.turnsNoFood +=1
-        if(self.turnsNoFood > 100):
+        if(self.turnsNoFood > 200):
             turtle.clear()
             self.cleaned()
             return
@@ -36,14 +36,16 @@ class snakeGame:
         # Play
         stepData = track(len(self.snake), len(self.snake) * 10, self.whereIsCoordinate(vector(head.x - 10, head.y)), self.whereIsCoordinate(vector(head.x + 10, head.y)), self.whereIsCoordinate(vector(head.x, head.y + 10)), self.whereIsCoordinate(vector(head.x, head.y - 10)), (head.x, head.y), (self.food.x, self.food.y), None)
         self.performPredictedMove(predict(stepData))
+        print("Snakes state - {0}".format(stepData))
+        print("{0}".format(self.moveDirection(head, self.aim)))
         # Hardcoded snake game. To improve learning
-        if(len(self.snake) > 0):
-            self.aim.x = 0
-            self.aim.y = 0
-            if((head.y - self.food.y) != 0):
-                self.aim.y = 10 * -((head.y - self.food.y) / abs(head.y - self.food.y))
-            if((head.x - self.food.x) != 0  and self.aim.y == 0):
-                self.aim.x = 10 * -((head.x - self.food.x) / abs(head.x - self.food.x))
+        # if(len(self.snake) > 0):
+        #     self.aim.x = 0
+        #     self.aim.y = 0
+        #     if((head.y - self.food.y) != 0):
+        #         self.aim.y = 10 * -((head.y - self.food.y) / abs(head.y - self.food.y))
+        #     if((head.x - self.food.x) != 0  and self.aim.y == 0):
+        #         self.aim.x = 10 * -((head.x - self.food.x) / abs(head.x - self.food.x))
         # Learn
         direction = self.moveDirection(head, self.aim)
         track(len(self.snake), len(self.snake) * 10, self.whereIsCoordinate(vector(head.x - 10, head.y)), self.whereIsCoordinate(vector(head.x + 10, head.y)), self.whereIsCoordinate(vector(head.x, head.y + 10)), self.whereIsCoordinate(vector(head.x, head.y - 10)), (head.x, head.y), (self.food.x, self.food.y), direction)
@@ -52,7 +54,7 @@ class snakeGame:
         if not self.inside(head) or head in self.snake:
             square(head.x, head.y, 9, 'red')
             turtle.update()
-            print("reseting field")
+            print("Snake died. Reset game board.")
             turtle.clear()
             self.cleaned()
             return
@@ -91,9 +93,9 @@ class snakeGame:
     def performPredictedMove(self, predictedDirection):
         if(predictedDirection == 0):
             self.right()
-        elif(predictedDirection == 1):
+        elif(predictedDirection == 3):
             self.left()
-        elif(predictedDirection == 2):
+        elif(predictedDirection == 1):
             self.top()
         elif(predictedDirection == 3):
             self.bottom()
