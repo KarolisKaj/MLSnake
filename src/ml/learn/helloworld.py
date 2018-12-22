@@ -14,7 +14,7 @@ model.add(tf.keras.layers.Dense(128, activation = tf.nn.relu))
 model.add(tf.keras.layers.Dense(10, activation = tf.nn.softmax))
 
 model.compile(optimizer = 'adam', loss='sparse_categorical_crossentropy', metrics=['accuracy'])
-model.fit(x_train, y_train, epochs=4)
+model.fit(x_train, y_train, epochs=7)
 
 validation_loss, validation_accuracy =  model.evaluate(x_test, y_test)
 print(validation_loss, validation_accuracy)
@@ -22,7 +22,7 @@ print(validation_loss, validation_accuracy)
 predictions = model.predict([x_test[0:2]])
 
 import numpy as np
-print(np.argmax(predictions[9]))
+print(np.argmax(predictions[1]))
 
 import matplotlib.pyplot as plt
 plt.imshow(x_test[9])
